@@ -1,17 +1,28 @@
-//
-//  EspacoApp.swift
-//  Espaco
-//
-//  Created by Gabriel Dias on 05/09/26.
-//
-
 import SwiftUI
 
 @main
 struct EspacoApp: App {
+    @State private var state = AppState()
+
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        Window("Espaço", id: "principal") {
+            RootView()
+                .environment(state)
+                .frame(minWidth: 860, idealWidth: 1020, minHeight: 560, idealHeight: 700)
+                .task {
+                    Notifier.pedirPermissao()
+                    Aparencia.shared.aplicar()
+                    await state.scan()
+                }
         }
+        .windowResizability(.contentMinSize)
+
+        MenuBarExtra {
+            MenuBarView()
+                .environment(state)
+        } label: {
+            Text(state.disk.total > 0 ? Fmt.bytes(state.disk.available) : "—")
+        }
+        .menuBarExtraStyle(.window)
     }
 }
