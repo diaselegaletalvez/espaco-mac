@@ -15,6 +15,8 @@ struct AutomationView: View {
             VStack(alignment: .leading, spacing: 20) {
 
                 cabecalho
+                CartaoAtualizacao()
+                CartaoVigilancia()
                 agendamento
                 aparencia
                 Divider().padding(.vertical, 4)
@@ -309,5 +311,166 @@ struct CartaoComando: View {
         }
         .background(Color.secondary.opacity(0.08),
                     in: RoundedRectangle(cornerRadius: T.cartao))
+    }
+}
+
+
+struct CartaoAtualizacao: View {
+    @Bindable private var up = Updater.shared
+
+    var body: some View {
+        Cartao(titulo: "Atualizações") {
+            HStack(spacing: 11) {
+                Image(systemName: icone)
+                    .font(.title3)
+                    .foregroundStyle(cor)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(titulo).font(.body.weight(.medium))
+                    Text(detalhe)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 10)
+
+                acao
+            }
+
+            if case .baixando(let p) = up.estado {
+                ProgressView(value: p).progressViewStyle(.linear)
+            }
+
+            Toggle("Checar automaticamente uma vez por dia", isOn: $up.checarAutomaticamente)
+                .toggleStyle(.switch)
+                .controlSize(.small)
+                .font(.callout)
+                .padding(.top, 2)
+
+            if let v = up.disponivel, !v.notas.isEmpty {
+                DisclosureGroup("O que mudou na \(v.versao)") {
+                    Text(v.notas)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.top, 6)
+                }
+                .font(.callout)
+            }
+        }
+    }
+
+    private var icone: String {
+        switch up.estado {
+        case .atualizado: return "checkmark.circle.fill"
+        case .disponivel: return "arrow.down.circle.fill"
+        case .erro:       return "exclamationmark.triangle.fill"
+        case .pronto:     return "checkmark.circle.fill"
+        default:          return "arrow.triangle.2.circlepath"
+        }
+    }
+
+    private var cor: Color {
+        switch up.estado {
+        case .atualizado, .pronto: return T.ok
+        case .disponivel:          return Color.accentColor
+        case .erro:                return T.atencao
+        default:                   return .secondary
+        }
+    }
+
+    private var titulo: String {
+        switch up.estado {
+        case .ocioso:      return "Espaço \(up.versaoAtual)"
+        case .checando:    return "Procurando versão nova…"
+        case .atualizado:  return "Você está na versão mais recente"
+        case .disponivel(let v): return "Espaço \(v) disponível"
+        case .baixando:    return "Baixando…"
+        case .instalando:  return "Instalando…"
+        case .pronto:      return "Atualizado. Reiniciando o app…"
+        case .erro(let e): return "Não deu pra checar"
+        }
+    }
+
+    private var detalhe: String {
+        switch up.estado {
+        case .disponivel:
+            if let v = up.disponivel {
+                return "Você está na \(up.versaoAtual) · download de \(v.descricaoTamanho)"
+            }
+            return ""
+        case .erro(let e): return e
+        case .instalando:  return "Conferindo a assinatura antes de substituir o app"
+        default:           return "Instalado em Aplicativos"
+        }
+    }
+
+    @ViewBuilder
+    private var acao: some View {
+        switch up.estado {
+        case .disponivel:
+            Button("Atualizar agora") {
+                Task { await up.baixarEInstalar() }
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.small)
+        case .checando, .baixando, .instalando:
+            ProgressView().controlSize(.small)
+        default:
+            Button("Procurar agora") {
+                Task { await up.checar() }
+            }
+            .controlSize(.small)
+        }
+    }
+}
+
+struct CartaoVigilancia: View {
+    @Bindable private var vigia = Vigia.shared
+
+    var body: some View {
+        Cartao(titulo: "Vigilância em segundo plano") {
+            Toggle("Abrir o Espaço quando eu ligar o Mac", isOn: $vigia.abrirNoLogin)
+                .toggleStyle(.switch)
+                .controlSize(.small)
+
+            Toggle("Avisar quando algo novo passar a rodar no boot", isOn: $vigia.vigilanciaLigada)
+                .toggleStyle(.switch)
+                .controlSize(.small)
+
+            Text("Com a vigilância ligada, o app observa LaunchAgents, LaunchDaemons e a pasta Aplicativos. Se aparecer algo novo, você recebe uma notificação na hora — é assim que adware é pego cedo. Os números do disco também se atualizam sozinhos a cada 15 minutos.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            if !vigia.mudancas.isEmpty {
+                Divider().padding(.vertical, 2)
+
+                HStack {
+                    Text("Mudanças recentes")
+                        .font(T.rotulo)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Button("Limpar") { vigia.limparHistorico() }
+                        .buttonStyle(.link)
+                        .font(.caption)
+                }
+
+                ForEach(vigia.mudancas.prefix(8)) { m in
+                    HStack(spacing: 9) {
+                        Circle().fill(Color.secondary.opacity(0.5))
+                            .frame(width: 5, height: 5)
+                        Text(m.descricao).font(.callout)
+                        Spacer(minLength: 8)
+                        Text(m.pasta).font(.caption2).foregroundStyle(.tertiary)
+                        Text(m.quando.formatted(date: .omitted, time: .shortened))
+                            .font(.caption2).foregroundStyle(.tertiary)
+                    }
+                    .padding(.vertical, 3)
+                }
+            }
+        }
     }
 }

@@ -12,6 +12,10 @@ struct ProtectionView: View {
 
                 cabecalho
 
+                notaSeguranca
+                raioX
+                cartaoRede
+
                 if state.analisandoSeguranca {
                     HStack(spacing: 9) {
                         ProgressView().controlSize(.small)
@@ -233,6 +237,132 @@ struct ProtectionView: View {
         }
     }
 
+
+    private var notaSeguranca: some View {
+        let rx = state.raioX
+        return Group {
+            if rx.feitoEm != nil {
+                HStack(spacing: 20) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("\(rx.nota)")
+                            .font(.system(size: 44, weight: .semibold, design: .rounded))
+                            .monospacedDigit()
+                            .foregroundStyle(rx.nota >= 85 ? T.ok : (rx.nota >= 60 ? T.atencao : T.critico))
+                        Text("de 100")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack(spacing: 14) {
+                            selo("\(rx.criticos.count)", "críticos", T.critico)
+                            selo("\(rx.avisos.count)", "avisos", T.atencao)
+                            selo("\(rx.limpos.count)", "em ordem", T.ok)
+                        }
+                        Text(rx.criticos.isEmpty
+                             ? "Nenhuma brecha crítica nas seis checagens principais."
+                             : "Comece pelos críticos — eles dão acesso ao que você digita e navega.")
+                            .font(.callout)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Spacer()
+                }
+                .padding(16)
+                .background(Color.secondary.opacity(0.08),
+                            in: RoundedRectangle(cornerRadius: T.cartao))
+            }
+        }
+    }
+
+    private func selo(_ numero: String, _ rotulo: String, _ cor: Color) -> some View {
+        HStack(spacing: 5) {
+            Text(numero)
+                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                .monospacedDigit()
+                .foregroundStyle(cor)
+            Text(rotulo)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var raioX: some View {
+        VStack(alignment: .leading, spacing: 9) {
+            if state.raioX.feitoEm != nil {
+                Text("As seis checagens que mais importam")
+                    .font(.headline)
+
+                ForEach(state.raioX.achados) { a in
+                    LinhaAchadura(achadura: a)
+                }
+            }
+        }
+    }
+
+    private var cartaoRede: some View {
+        let r = state.rede
+        return Cartao(titulo: "Rede e VPN") {
+            HStack(spacing: 11) {
+                Image(systemName: r.vpnAtiva ? "lock.shield.fill"
+                                             : (r.arriscado ? "wifi.exclamationmark" : "wifi"))
+                    .font(.title3)
+                    .foregroundStyle(r.vpnAtiva ? T.ok : (r.arriscado ? T.critico : .secondary))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(r.vpnAtiva ? "VPN ativa" : (r.ssid ?? "Sem Wi-Fi"))
+                        .font(.body.weight(.medium))
+                    Text(r.resumo)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer()
+            }
+
+            Divider().padding(.vertical, 2)
+
+            linhaRede("Endereço local", r.ipLocal.isEmpty ? "—" : r.ipLocal)
+            if !r.interfacesVPN.isEmpty {
+                linhaRede("Túnel VPN", r.interfacesVPN.joined(separator: ", "))
+            }
+            if !r.dnsUsados.isEmpty {
+                linhaRede("DNS", r.dnsUsados.prefix(3).joined(separator: ", "))
+            }
+
+            if let ip = r.ipPublico {
+                linhaRede("Endereço público", ip + (r.paisIP.map { " · \($0)" } ?? ""))
+                if let prov = r.provedorIP {
+                    linhaRede("Sai pela", prov)
+                }
+            } else {
+                HStack {
+                    Button("Descobrir meu IP público") {
+                        Task { await state.consultarIPPublico() }
+                    }
+                    .controlSize(.small)
+                    Text("consulta o ipinfo.io")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                    Spacer()
+                }
+                .padding(.top, 2)
+            }
+        }
+    }
+
+    private func linhaRede(_ rotulo: String, _ valor: String) -> some View {
+        HStack {
+            Text(rotulo).font(.callout).foregroundStyle(.secondary)
+            Spacer()
+            Text(valor)
+                .font(.callout.monospacedDigit())
+                .lineLimit(1)
+                .truncationMode(.middle)
+        }
+        .padding(.vertical, 2)
+    }
+
     private var rodape: some View {
         HStack(alignment: .top, spacing: 9) {
             Image(systemName: "info.circle")
@@ -244,5 +374,98 @@ struct ProtectionView: View {
             Spacer()
         }
         .padding(.top, 6)
+    }
+}
+
+
+struct LinhaAchadura: View {
+    let achadura: Achadura
+    @State private var aberto = false
+
+    private var cor: Color {
+        switch achadura.gravidade {
+        case .ok: return T.ok
+        case .atencao: return T.atencao
+        case .alerta: return T.critico
+        }
+    }
+
+    private var icone: String {
+        switch achadura.gravidade {
+        case .ok: return "checkmark.circle.fill"
+        case .atencao: return "exclamationmark.circle.fill"
+        case .alerta: return "exclamationmark.triangle.fill"
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 11) {
+                Image(systemName: icone)
+                    .foregroundStyle(cor)
+                    .font(.system(size: 15))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(achadura.titulo).font(.body.weight(.medium))
+                    Text(achadura.estado)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer(minLength: 10)
+
+                Image(systemName: aberto ? "chevron.up" : "chevron.down")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.vertical, 11)
+            .padding(.horizontal, 13)
+            .contentShape(Rectangle())
+            .onTapGesture { aberto.toggle() }
+
+            if aberto {
+                VStack(alignment: .leading, spacing: 9) {
+                    Text(achadura.porqueImporta)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    if !achadura.detalhes.isEmpty {
+                        VStack(alignment: .leading, spacing: 4) {
+                            ForEach(achadura.detalhes, id: \.self) { d in
+                                HStack(spacing: 7) {
+                                    Circle().fill(cor.opacity(0.6)).frame(width: 4, height: 4)
+                                    Text(d)
+                                        .font(.callout.monospacedDigit())
+                                        .lineLimit(1)
+                                        .truncationMode(.middle)
+                                    Spacer()
+                                }
+                            }
+                        }
+                        .padding(10)
+                        .background(Color.black.opacity(0.18),
+                                    in: RoundedRectangle(cornerRadius: 6))
+                    }
+
+                    if let resolver = achadura.comoResolver {
+                        HStack(alignment: .top, spacing: 8) {
+                            Image(systemName: "wrench.and.screwdriver")
+                                .font(.caption)
+                                .foregroundStyle(cor)
+                            Text(resolver)
+                                .font(.callout)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .padding(11)
+                        .background(cor.opacity(0.12), in: RoundedRectangle(cornerRadius: 7))
+                    }
+                }
+                .padding(.horizontal, 13)
+                .padding(.bottom, 13)
+            }
+        }
+        .background(achadura.gravidade == .ok ? Color.secondary.opacity(0.08) : cor.opacity(0.10),
+                    in: RoundedRectangle(cornerRadius: T.cartao))
     }
 }

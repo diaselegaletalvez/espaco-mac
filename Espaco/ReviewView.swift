@@ -115,7 +115,7 @@ struct ReviewView: View {
                     .font(.title3)
                     .foregroundStyle(.secondary)
 
-                Text("\(Fmt.bytes(state.disk.available)) livres de \(Fmt.bytes(state.disk.total))")
+                Text("\(Fmt.bytes(state.disk.available)) livres de \(Fmt.bytes(state.disk.totalExibido))")
                     .font(.caption)
                     .monospacedDigit()
                     .foregroundStyle(.tertiary)

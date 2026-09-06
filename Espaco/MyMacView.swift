@@ -53,7 +53,7 @@ struct MyMacView: View {
 
                     Cartao(titulo: "Armazenamento") {
                         linha(Fmt.bytes(i.discoLivre) + " livres", grande: true)
-                        linha("de \(Fmt.bytes(i.discoTotal))")
+                        linha("de \(Fmt.bytes(state.disk.totalExibido))")
                         Medidor(titulo: "ocupado",
                                 valor: Fmt.pct(state.disk.usedFraction),
                                 fracao: state.disk.usedFraction,
@@ -112,7 +112,7 @@ struct MyMacView: View {
         \(i.macOSNome) \(i.macOSVersao) (\(i.macOSBuild))
         \(i.chip) · \(i.resumoNucleos)
         Memória: \(Fmt.bytes(i.ram))
-        Disco: \(Fmt.bytes(i.discoLivre)) livres de \(Fmt.bytes(i.discoTotal))
+        Disco: \(Fmt.bytes(i.discoLivre)) livres de \(Fmt.bytes(state.disk.totalExibido))
         Bateria: \(state.saude.bateriaPct.map { "\($0)%" } ?? "—")\(state.saude.bateriaSaude.map { " · capacidade \($0)%" } ?? "")\(state.saude.bateriaCiclos.map { " · \($0) ciclos" } ?? "")
         """
         NSPasteboard.general.clearContents()

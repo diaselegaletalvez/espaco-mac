@@ -5,6 +5,8 @@ struct DiskInfo: Sendable {
     var available: Int64 = 0
     var used: Int64 = 0
 
+    var totalExibido: Int64 { used + available }
+
     var usedFraction: Double {
         let denom = used + available
         return denom > 0 ? Double(used) / Double(denom) : 0

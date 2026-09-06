@@ -21,7 +21,7 @@ struct MenuBarView: View {
                     .monospacedDigit()
                     .foregroundStyle(state.disk.isTight ? .red : .primary)
 
-                Text("livres de \(Fmt.bytes(state.disk.total)) · \(Fmt.pct(state.disk.usedFraction)) usado")
+                Text("livres de \(Fmt.bytes(state.disk.totalExibido)) · \(Fmt.pct(state.disk.usedFraction)) usado")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

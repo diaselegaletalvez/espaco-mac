@@ -30,7 +30,7 @@ struct DashboardView: View {
                         .frame(height: 12)
 
                     HStack {
-                        Text("\(Fmt.bytes(state.disk.used)) usados de \(Fmt.bytes(state.disk.total))")
+                        Text("\(Fmt.bytes(state.disk.used)) usados de \(Fmt.bytes(state.disk.totalExibido))")
                         Spacer()
                         Text(Fmt.pct(state.disk.usedFraction))
                     }

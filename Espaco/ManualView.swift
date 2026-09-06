@@ -2,16 +2,21 @@ import SwiftUI
 import AppKit
 
 struct ManualView: View {
+    @Environment(AppState.self) private var state
     var comoJanela = false
     var fechar: (() -> Void)?
 
     @State private var copiado: String?
     @State private var busca = ""
 
+    private var fonte: [ComandoManual] {
+        state.manual.isEmpty ? Automation.manual : state.manual
+    }
+
     private var filtrados: [ComandoManual] {
-        guard !busca.isEmpty else { return Automation.manual }
+        guard !busca.isEmpty else { return fonte }
         let t = busca.lowercased()
-        return Automation.manual.filter {
+        return fonte.filter {
             $0.titulo.lowercased().contains(t)
             || $0.porque.lowercased().contains(t)
             || $0.comando.lowercased().contains(t)
@@ -25,7 +30,9 @@ struct ManualView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Manual")
                             .font(.system(size: 20, weight: .semibold, design: .rounded))
-                        Text("Tudo que o Espaço faz por botão, aqui em comando de terminal.")
+                        Text(state.perfilMaquina.levantadoEm == nil
+                             ? "Tudo que o Espaço faz por botão, aqui em comando de terminal."
+                             : state.perfilMaquina.descricao)
                             .font(.callout)
                             .foregroundStyle(.secondary)
                     }
@@ -55,12 +62,24 @@ struct ManualView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Manual")
                         .font(.system(size: 20, weight: .semibold, design: .rounded))
-                    Text("O que o app faz por botão, aqui está por comando — pra quando você quiser entender, adaptar ou rodar numa máquina sem o Espaço.")
+                    Text(state.perfilMaquina.levantadoEm == nil
+                         ? "O que o app faz por botão, aqui está por comando."
+                         : "\(state.perfilMaquina.descricao) Os blocos abaixo foram montados com os caminhos e tamanhos reais desta máquina — o que não existe aqui não aparece.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .padding(.bottom, 14)
+            }
+
+            if state.montandoManual {
+                HStack(spacing: 9) {
+                    ProgressView().controlSize(.small)
+                    Text("Medindo esta máquina pra montar o manual…")
+                        .font(.callout).foregroundStyle(.secondary)
+                }
+                .padding(comoJanela ? 24 : 0)
+                .padding(.bottom, 8)
             }
 
             ScrollView {
@@ -90,5 +109,6 @@ struct ManualView: View {
         }
         .frame(minWidth: comoJanela ? 620 : nil,
                minHeight: comoJanela ? 520 : nil)
+        .task { if state.manual.isEmpty { await state.montarManual() } }
     }
 }

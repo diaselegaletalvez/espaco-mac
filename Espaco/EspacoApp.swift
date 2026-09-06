@@ -12,6 +12,8 @@ struct EspacoApp: App {
                 .task {
                     Notifier.pedirPermissao()
                     Aparencia.shared.aplicar()
+                    Vigia.shared.ligar(state)
+                    await Updater.shared.checarSePassouODia()
                     await state.scan()
                 }
         }

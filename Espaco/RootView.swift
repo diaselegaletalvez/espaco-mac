@@ -130,6 +130,7 @@ struct RootView: View {
         }
         .sheet(isPresented: $mostrarManual) {
             ManualView(comoJanela: true) { mostrarManual = false }
+                .environment(state)
         }
     }
 }

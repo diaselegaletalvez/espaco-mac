@@ -30,6 +30,11 @@ final class AppState {
     var agenda = EstadoAgenda()
     var seguranca = RelatorioSeguranca()
     var analisandoSeguranca = false
+    var raioX = RaioX()
+    var rede = EstadoRede()
+    var perfilMaquina = PerfilMaquina()
+    var manual: [ComandoManual] = []
+    var montandoManual = false
     var scanningDuplicados = false
     var duplicadosVarridos = false
     var etapaAtual = ""
@@ -65,6 +70,10 @@ final class AppState {
 
     func selectSafeOnly() {
         selection = Set(targets.filter { $0.risk == .zero && $0.size > 0 }.map(\.id))
+    }
+
+    func refreshDiskOnly() {
+        disk = Scanner.disk()
     }
 
     func scan() async {
@@ -324,6 +333,8 @@ final class AppState {
         guard !analisandoSeguranca else { return }
         analisandoSeguranca = true
         seguranca = await Task.detached(priority: .utility) { Security.analisar() }.value
+        raioX = await Task.detached(priority: .utility) { SecurityDeep.raioX() }.value
+        rede = await Task.detached(priority: .utility) { Network.local() }.value
         analisandoSeguranca = false
     }
 
@@ -343,5 +354,22 @@ final class AppState {
         Notifier.avisar("Cópias na Lixeira", "\(Fmt.bytes(r.freed)) liberados quando esvaziar")
         await scanDuplicados()
         await scan()
+    }
+
+    func consultarIPPublico() async {
+        guard let info = await Network.consultarIPPublico() else { return }
+        rede.ipPublico = info.ip
+        rede.paisIP = info.pais
+        rede.provedorIP = info.provedor
+        rede.consultadoEm = Date()
+    }
+
+    func montarManual() async {
+        guard !montandoManual else { return }
+        montandoManual = true
+        let p = await Task.detached(priority: .utility) { Perfilador.levantar() }.value
+        perfilMaquina = p
+        manual = ManualAdaptativo.montar(p)
+        montandoManual = false
     }
 }
