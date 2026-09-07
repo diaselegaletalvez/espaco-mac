@@ -13,6 +13,10 @@ struct EspacoApp: App {
                     Notifier.pedirPermissao()
                     Aparencia.shared.aplicar()
                     Vigia.shared.ligar(state)
+                    ServidorLocal.shared.conectar(state)
+                    if !Pareamento.shared.dispositivos.isEmpty {
+                        ServidorLocal.shared.ligar()
+                    }
                     await Updater.shared.checarSePassouODia()
                     await state.scan()
                 }

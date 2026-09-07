@@ -1,0 +1,271 @@
+#!/bin/bash
+#
+#  espaco  --  automações de limpeza do Espaço
+#  Dias Inc. · https://diaselegaletalvez.github.io/espaco
+#
+
+VERSAO="2.0"
+G=$'\033[0;32m'; A=$'\033[1;33m'; V=$'\033[0;31m'; B=$'\033[0;36m'; C=$'\033[0;90m'; N=$'\033[0m'
+
+LK(){ df -k /System/Volumes/Data | tail -1 | awk '{print $4}'; }
+FMT(){ awk -v k="${1:-0}" 'BEGIN{s=(k<0)?"":"+"; if(k<0)k=-k; if(k<1024)printf "%s%d KB",s,k; else if(k<1048576)printf "%s%d MB",s,k/1024; else printf "%s%.1f GB",s,k/1048576}'; }
+TOTAL=0
+
+X(){
+  local nome="$1"; shift
+  local antes=$(LK)
+  printf "  ${A}[..]${N} %-38s" "$nome"
+  for alvo in "$@"; do [ -e "$alvo" ] && rm -rf "$alvo" 2>/dev/null; done
+  local d=$(( $(LK) - antes ))
+  if [ "$d" -gt 512 ]; then
+    printf "\r  ${G}[ok]${N} %-38s ${G}%s${N}\n" "$nome" "$(FMT $d)"
+    TOTAL=$((TOTAL + d))
+  else
+    printf "\r  ${C}[--] %-38s nada${N}\n" "$nome"
+  fi
+}
+
+disco(){
+  df -h /System/Volumes/Data | tail -1 | awk -v b="$B" -v n="$N" \
+    '{print "  "b"disco:"n"  usado "$3"  livre "$4"  ("$5")"}'
+}
+
+ajuda(){
+  cat <<AJUDA
+
+  ${G}espaco${N} ${C}$VERSAO${N} — automações de limpeza do Mac
+
+  ${B}espaco status${N}      quanto tem livre e o que dá pra limpar
+  ${B}espaco limpar${N}      limpa conforme o nível configurado
+  ${B}espaco limpar medio${N} força o nível médio nesta vez
+  ${B}espaco nivel${N}       mostra ou troca o nível padrão
+  ${B}espaco relatorio${N}   gera o relatório de hoje em ~/Relatorios
+  ${B}espaco agendar${N}     liga o relatório diário à meia-noite
+  ${B}espaco parar${N}       desliga o relatório diário
+  ${B}espaco fundo${N}       o que está pesando fora da sua pasta pessoal
+
+  Limpeza que exige decisão (node_modules, Archives, apps) fica no app,
+  onde você vê cada item antes de confirmar.
+
+AJUDA
+}
+
+alvos_seguros(){
+  X "Símbolos de debug do iPhone"  ~/Library/Developer/Xcode/iOS\ DeviceSupport/*
+  X "DerivedData"                  ~/Library/Developer/Xcode/DerivedData/*
+  X "Logs de dispositivo"          ~/Library/Developer/Xcode/DeviceLogs/*
+  X "Caches de simulador"          ~/Library/Developer/CoreSimulator/Caches/*
+  X "CocoaPods"                    ~/Library/Caches/CocoaPods ~/.cocoapods/repos/trunk
+  X "npm"                          ~/.npm/_cacache
+  X "Expo"                         ~/.expo
+  X "React Native"                 ~/Library/Caches/ReactNative
+  X "electron"                     ~/Library/Caches/electron ~/Library/Caches/electron-builder
+  X "node-gyp"                     ~/Library/Caches/node-gyp
+  X "yarn / pnpm"                  ~/Library/Caches/Yarn ~/Library/Caches/pnpm ~/.cache/yarn
+  X "gradle"                       ~/.gradle/caches
+  X "Homebrew"                     ~/Library/Caches/Homebrew
+  X "VS Code ShipIt"               ~/Library/Caches/com.microsoft.VSCode.ShipIt
+  X "Cache do Claude"              ~/Library/Application\ Support/Claude/Cache \
+                                   ~/Library/Application\ Support/Claude/Code\ Cache \
+                                   ~/Library/Application\ Support/Claude/GPUCache
+  X "Cache do Cursor"              ~/Library/Application\ Support/Cursor/Cache \
+                                   ~/Library/Application\ Support/Cursor/CachedData
+  X "Cache do Chrome"              ~/Library/Application\ Support/Google/Chrome/*/Cache \
+                                   ~/Library/Application\ Support/Google/Chrome/*/Code\ Cache \
+                                   ~/Library/Caches/Google
+  X "Logs do usuário"              ~/Library/Logs/*
+
+  if command -v brew >/dev/null 2>&1; then
+    printf "  ${A}[..]${N} %-38s" "brew cleanup"
+    brew cleanup --prune=all -s >/dev/null 2>&1
+    printf "\r  ${G}[ok]${N} %-38s ${C}feito${N}\n" "brew cleanup"
+  fi
+
+  if command -v xcrun >/dev/null 2>&1; then
+    printf "  ${A}[..]${N} %-38s" "simuladores órfãos"
+    xcrun simctl delete unavailable >/dev/null 2>&1
+    printf "\r  ${G}[ok]${N} %-38s ${C}feito${N}\n" "simuladores órfãos"
+  fi
+}
+
+cmd_status(){
+  echo
+  disco
+  echo
+  echo "  ${C}pesando na sua pasta pessoal:${N}"
+  du -sh ~/Library/Developer ~/Library/Caches ~/Library/Application\ Support 2>/dev/null \
+    | sort -rh | head -5 | sed 's|'"$HOME"'|~|' | sed 's/^/    /'
+  echo
+}
+
+nivel_configurado(){
+  local cfg="$HOME/.espaco/config"
+  [ -f "$cfg" ] || { echo "zero"; return; }
+  grep '^nivel=' "$cfg" 2>/dev/null | head -1 | cut -d= -f2 | tr -d ' ' || echo "zero"
+}
+
+dias_dormente(){
+  local cfg="$HOME/.espaco/config"
+  local d
+  d=$(grep '^dias_dormente=' "$cfg" 2>/dev/null | head -1 | cut -d= -f2 | tr -d ' ')
+  echo "${d:-60}"
+}
+
+pasta_projetos(){
+  for nome in projetos Projetos Developer Projects code Code dev src repos; do
+    if [ -d "$HOME/$nome" ]; then
+      if ls -d "$HOME/$nome"/*/node_modules >/dev/null 2>&1 || \
+         ls -d "$HOME/$nome"/*/package.json >/dev/null 2>&1; then
+        echo "$HOME/$nome"
+        return
+      fi
+    fi
+  done
+}
+
+alvos_medios(){
+  local raiz
+  raiz=$(pasta_projetos)
+  [ -z "$raiz" ] && { echo "  ${C}[--] nenhuma pasta de projetos encontrada${N}"; return; }
+
+  local dias
+  dias=$(dias_dormente)
+  echo "  ${C}projetos sem toque há mais de $dias dias, em $(basename "$raiz")${N}"
+  echo
+
+  local achou=0
+  for proj in "$raiz"/*/; do
+    [ -d "$proj" ] || continue
+    local nome
+    nome=$(basename "$proj")
+
+    local marcador="$proj"
+    [ -f "$proj/.git/HEAD" ] && marcador="$proj/.git/HEAD"
+    [ -f "$proj/package.json" ] && marcador="$proj/package.json"
+
+    if [ -n "$(find "$marcador" -maxdepth 0 -mtime +"$dias" 2>/dev/null)" ]; then
+      local pesados=()
+      for sub in node_modules ios/Pods .next .expo; do
+        [ -d "$proj$sub" ] && pesados+=("$proj$sub")
+      done
+      if [ ${#pesados[@]} -gt 0 ]; then
+        achou=1
+        local antes=$(LK)
+        printf "  ${A}[..]${N} %-38s" "$nome"
+        for alvo in "${pesados[@]}"; do
+          osascript -e "tell application \"Finder\" to delete POSIX file \"$alvo\"" >/dev/null 2>&1 \
+            || rm -rf "$alvo" 2>/dev/null
+        done
+        local d=$(( $(LK) - antes ))
+        if [ "$d" -gt 512 ]; then
+          printf "\r  ${G}[ok]${N} %-38s ${G}%s${N} ${C}pra Lixeira${N}\n" "$nome" "$(FMT $d)"
+          TOTAL=$((TOTAL + d))
+        else
+          printf "\r  ${C}[--] %-38s nada${N}\n" "$nome"
+        fi
+      fi
+    fi
+  done
+
+  [ "$achou" = "0" ] && echo "  ${C}[--] nenhum projeto parado o suficiente${N}"
+}
+
+cmd_limpar(){
+  local nivel
+  nivel=$(nivel_configurado)
+  [ -n "$1" ] && nivel="$1"
+
+  echo
+  if [ "$nivel" = "medio" ]; then
+    echo "  ${G}Limpando risco zero e médio${N}"
+    echo "  ${C}caches somem de vez; dependências vão pra Lixeira${N}"
+  else
+    echo "  ${G}Limpando o que é risco zero${N}"
+    echo "  ${C}tudo isso se regenera sozinho${N}"
+  fi
+  echo
+
+  alvos_seguros
+
+  if [ "$nivel" = "medio" ]; then
+    echo
+    alvos_medios
+  fi
+
+  echo
+  disco
+  echo "  ${G}liberado: $(FMT $TOTAL)${N}"
+  [ "$nivel" = "medio" ] && echo "  ${C}esvazie a Lixeira pra completar${N}"
+  echo
+}
+
+cmd_relatorio(){
+  if [ -x "$HOME/bin/mac-report.sh" ]; then
+    "$HOME/bin/mac-report.sh"
+    echo "  ${C}abra com: open ~/Relatorios/ultimo.md${N}"
+  else
+    echo "  ${V}script de relatório não encontrado em ~/bin${NC}"
+    exit 1
+  fi
+}
+
+cmd_agendar(){
+  local plist="$HOME/Library/LaunchAgents/com.diasinc.macreport.plist"
+  [ -f "$plist" ] || { echo "  ${V}agendamento não instalado${N}"; exit 1; }
+  launchctl bootout "gui/$(id -u)/com.diasinc.macreport" 2>/dev/null
+  launchctl bootstrap "gui/$(id -u)" "$plist" 2>/dev/null
+  launchctl enable "gui/$(id -u)/com.diasinc.macreport" 2>/dev/null
+  echo "  ${G}[ok]${N} relatório diário ligado, roda à meia-noite"
+}
+
+cmd_parar(){
+  launchctl bootout "gui/$(id -u)/com.diasinc.macreport" 2>/dev/null
+  echo "  ${G}[ok]${N} relatório diário desligado"
+}
+
+cmd_nivel(){
+  mkdir -p "$HOME/.espaco"
+  local cfg="$HOME/.espaco/config"
+
+  if [ -z "$1" ]; then
+    echo
+    echo "  nível atual: ${G}$(nivel_configurado)${N}"
+    echo "  ${C}espaco nivel zero${N}   só caches"
+    echo "  ${C}espaco nivel medio${N}  caches + dependências de projetos parados"
+    echo
+    return
+  fi
+
+  case "$1" in
+    zero|medio)
+      local dias
+      dias=$(dias_dormente)
+      printf "nivel=%s\ndias_dormente=%s\n" "$1" "$dias" > "$cfg"
+      echo "  ${G}[ok]${N} nível agora é $1"
+      ;;
+    *) echo "  ${V}nível inválido — use zero ou medio${N}" ;;
+  esac
+}
+
+cmd_fundo(){
+  echo
+  echo "  ${C}fora da sua pasta pessoal (pede senha):${N}"
+  sudo du -sh -x /Applications /Library /usr/local /opt /private/var 2>/dev/null | sort -rh | sed 's/^/    /'
+  echo
+  echo "  ${C}apps maiores:${N}"
+  du -sh /Applications/* 2>/dev/null | sort -rh | head -12 | sed 's/^/    /'
+  echo
+}
+
+case "${1:-ajuda}" in
+  status)    cmd_status ;;
+  limpar)    cmd_limpar "$2" ;;
+  turbo)     cmd_limpar "$2" ;;
+  nivel)     cmd_nivel "$2" ;;
+  relatorio) cmd_relatorio ;;
+  agendar)   cmd_agendar ;;
+  parar)     cmd_parar ;;
+  fundo)     cmd_fundo ;;
+  versao|-v|--version) echo "espaco $VERSAO" ;;
+  *)         ajuda ;;
+esac

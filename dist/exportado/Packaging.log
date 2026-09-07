@@ -1,95 +1,95 @@
-2026-09-06 16:50:17 +0000 [MT] Initial pipeline context: <IDEDistributionProcessingPipelineContext: 0xa53b8de00; archive(resolved)="<IDEArchive: 0xa55ce40e0>", distributionTask(resolved)="2", distributionDestination(resolved)="1", distributionMethod(resolved)="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team(resolved)="<IDEProvisioningBasicTeam: 0xa53466300; teamID='67DVMQ4BKC', teamName='(null)'>">
+2026-09-07 13:14:42 +0000 [MT] Initial pipeline context: <IDEDistributionProcessingPipelineContext: 0x795b9ea00; archive(resolved)="<IDEArchive: 0x797cb00e0>", distributionTask(resolved)="2", distributionDestination(resolved)="1", distributionMethod(resolved)="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team(resolved)="<IDEProvisioningBasicTeam: 0x79558c100; teamID='67DVMQ4BKC', teamName='(null)'>">
 	Chain (12, self inclusive):
-	<IDEDistributionProcessingPipelineContext: 0xa53b8de00; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="<IDEProvisioningBasicTeam: 0xa53466300; teamID='67DVMQ4BKC', teamName='(null)'>">
-	<IDEDistributionProcessingPipelineContext: 0xa53b8ea00; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="<IDEProvisioningBasicTeam: 0xa53466300; teamID='67DVMQ4BKC', teamName='(null)'>">
-	<IDEDistributionContext: 0xa55dd9e00; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="<IDEProvisioningBasicTeam: 0xa53466300; teamID='67DVMQ4BKC', teamName='(null)'>">
-	<IDEDistributionContext: 0xa55dd9b80; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="<IDEProvisioningBasicTeam: 0xa53466300; teamID='67DVMQ4BKC', teamName='(null)'>">
-	<IDEDistributionContext: 0xa55dd9900; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="<IDEProvisioningBasicTeam: 0xa53466300; teamID='67DVMQ4BKC', teamName='(null)'>">
-	<IDEDistributionContext: 0xa55dd9680; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="<IDEProvisioningBasicTeam: 0xa53466300; teamID='67DVMQ4BKC', teamName='(null)'>">
-	<IDEDistributionContext: 0xa55dd8780; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="<IDEProvisioningBasicTeam: 0xa53466300; teamID='67DVMQ4BKC', teamName='(null)'>">
-	<IDEDistributionContext: 0xa55dd8500; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="<IDEProvisioningBasicTeam: 0xa53466300; teamID='67DVMQ4BKC', teamName='(null)'>">
-	<IDEDistributionContext: 0xa55dd8280; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="<IDEProvisioningBasicTeam: 0xa53466300; teamID='67DVMQ4BKC', teamName='(null)'>">
-	<IDEDistributionContext: 0xa55dd8000; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="(null)">
-	<IDEDistributionContext: 0x1029ca830; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0xa545cb9f0>", team="(null)">
-	<IDEDistributionContext: 0x1029f6140; archive = "<IDEArchive: 0xa55ce40e0>", distributionMethod="(null)", team="(null)">
-</IDEDistributionProcessingPipelineContext: 0xa53b8de00>
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionCreateDestRootStep
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionCopyItemStep
-2026-09-06 16:50:17 +0000 [MT] Running /usr/bin/ditto '-V' '/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app' '/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~WqwdMi/Root/Applications/Espaco.app'
-2026-09-06 16:50:17 +0000  >>> Copying /Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app 
-2026-09-06 16:50:17 +0000  copying file ./Contents/_CodeSignature/CodeResources ... 
-2026-09-06 16:50:17 +0000  2672 bytes for ./Contents/_CodeSignature/CodeResources
-2026-09-06 16:50:17 +0000  copying file ./Contents/MacOS/Espaco ... 
-2026-09-06 16:50:17 +0000  3069520 bytes for ./Contents/MacOS/Espaco
-2026-09-06 16:50:17 +0000  copying file ./Contents/Resources/AppIcon.icns ... 
-2026-09-06 16:50:17 +0000  70937 bytes for ./Contents/Resources/AppIcon.icns
-2026-09-06 16:50:17 +0000  copying file ./Contents/Resources/Assets.car ... 
-2026-09-06 16:50:17 +0000  907448 bytes for ./Contents/Resources/Assets.car
-2026-09-06 16:50:17 +0000  copying file ./Contents/Info.plist ... 
-2026-09-06 16:50:17 +0000  1449 bytes for ./Contents/Info.plist
-2026-09-06 16:50:17 +0000  copying file ./Contents/PkgInfo ... 
-2026-09-06 16:50:17 +0000  8 bytes for ./Contents/PkgInfo
-2026-09-06 16:50:17 +0000 [MT] /usr/bin/ditto exited with 0
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionEmbedProfileStep
-2026-09-06 16:50:17 +0000 [MT] Skipping profile for item: <IDEDistributionItem: 0xa5342fcc0; bundleID='com.diaselegaletalvez.Espaco', path='<DVTFilePath:0xa5342dd40:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa5342ee20; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa5391f900; name='Apple Development: Leonardo Duarte Dias (DP4Y43J3V5)', hash='4440525F18A77EDD906EDF0C2832CF1A6B42CD34', serialNumber='5ED009CBDD38848EA4C2FD713FCBF9E5', certificateKinds='(
+	<IDEDistributionProcessingPipelineContext: 0x795b9ea00; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="<IDEProvisioningBasicTeam: 0x79558c100; teamID='67DVMQ4BKC', teamName='(null)'>">
+	<IDEDistributionProcessingPipelineContext: 0x795b9de00; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="<IDEProvisioningBasicTeam: 0x79558c100; teamID='67DVMQ4BKC', teamName='(null)'>">
+	<IDEDistributionContext: 0x797da2080; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="<IDEProvisioningBasicTeam: 0x79558c100; teamID='67DVMQ4BKC', teamName='(null)'>">
+	<IDEDistributionContext: 0x797da1b80; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="<IDEProvisioningBasicTeam: 0x79558c100; teamID='67DVMQ4BKC', teamName='(null)'>">
+	<IDEDistributionContext: 0x797da1900; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="<IDEProvisioningBasicTeam: 0x79558c100; teamID='67DVMQ4BKC', teamName='(null)'>">
+	<IDEDistributionContext: 0x797da1680; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="<IDEProvisioningBasicTeam: 0x79558c100; teamID='67DVMQ4BKC', teamName='(null)'>">
+	<IDEDistributionContext: 0x797da0780; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="<IDEProvisioningBasicTeam: 0x79558c100; teamID='67DVMQ4BKC', teamName='(null)'>">
+	<IDEDistributionContext: 0x797da0500; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="<IDEProvisioningBasicTeam: 0x79558c100; teamID='67DVMQ4BKC', teamName='(null)'>">
+	<IDEDistributionContext: 0x797da0280; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="<IDEProvisioningBasicTeam: 0x79558c100; teamID='67DVMQ4BKC', teamName='(null)'>">
+	<IDEDistributionContext: 0x797da0000; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="(null)">
+	<IDEDistributionContext: 0x105832830; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="<IDEDistributionMethodDeveloperID: 0x7965df9e0>", team="(null)">
+	<IDEDistributionContext: 0x10585e540; archive = "<IDEArchive: 0x797cb00e0>", distributionMethod="(null)", team="(null)">
+</IDEDistributionProcessingPipelineContext: 0x795b9ea00>
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionCreateDestRootStep
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionCopyItemStep
+2026-09-07 13:14:42 +0000 [MT] Running /usr/bin/ditto '-V' '/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app' '/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~nf6R0m/Root/Applications/Espaco.app'
+2026-09-07 13:14:42 +0000  >>> Copying /Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app 
+2026-09-07 13:14:42 +0000  copying file ./Contents/_CodeSignature/CodeResources ... 
+2026-09-07 13:14:42 +0000  2672 bytes for ./Contents/_CodeSignature/CodeResources
+2026-09-07 13:14:42 +0000  copying file ./Contents/MacOS/Espaco ... 
+2026-09-07 13:14:42 +0000  3377024 bytes for ./Contents/MacOS/Espaco
+2026-09-07 13:14:42 +0000  copying file ./Contents/Resources/AppIcon.icns ... 
+2026-09-07 13:14:42 +0000  70937 bytes for ./Contents/Resources/AppIcon.icns
+2026-09-07 13:14:42 +0000  copying file ./Contents/Resources/Assets.car ... 
+2026-09-07 13:14:42 +0000  907448 bytes for ./Contents/Resources/Assets.car
+2026-09-07 13:14:42 +0000  copying file ./Contents/Info.plist ... 
+2026-09-07 13:14:42 +0000  1460 bytes for ./Contents/Info.plist
+2026-09-07 13:14:42 +0000  copying file ./Contents/PkgInfo ... 
+2026-09-07 13:14:42 +0000  8 bytes for ./Contents/PkgInfo
+2026-09-07 13:14:42 +0000 [MT] /usr/bin/ditto exited with 0
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionEmbedProfileStep
+2026-09-07 13:14:42 +0000 [MT] Skipping profile for item: <IDEDistributionItem: 0x79543fae0; bundleID='com.diaselegaletalvez.Espaco', path='<DVTFilePath:0x79543dd40:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x79543ee80; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x79592f6c0; name='Apple Development: Leonardo Duarte Dias (DP4Y43J3V5)', hash='4440525F18A77EDD906EDF0C2832CF1A6B42CD34', serialNumber='5ED009CBDD38848EA4C2FD713FCBF9E5', certificateKinds='(
     "1.2.840.113635.100.6.1.12",
     "1.2.840.113635.100.6.1.2"
 ), issueDate='2026-08-01 14:26:54 +0000''>', entitlements='{
-}', teamID='67DVMQ4BKC', identifier='com.diaselegaletalvez.Espaco', executablePath='<DVTFilePath:0xa5342f4e0:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app/Contents/MacOS/Espaco'>', hardenedRuntime='1'>'>
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionInfoPlistStep
-2026-09-06 16:50:17 +0000 [MT] Skipping step: IDEDistributionInfoPlistStep because it said so
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionAppThinningPlistStep
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionSymbolsStep
-2026-09-06 16:50:17 +0000 [MT] Skipping step: IDEDistributionSymbolsStep because it said so
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionAppThinningStep
-2026-09-06 16:50:17 +0000 [MT] Skipping step: IDEDistributionAppThinningStep because it said so
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionArchThinningStep
-2026-09-06 16:50:17 +0000 [MT] Archs to thin for item /Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app are []
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionODRStep
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionStripXattrsStep
-2026-09-06 16:50:17 +0000 [MT] Skipping stripping extended attributes because the codesign step will strip them.
-2026-09-06 16:50:17 +0000 [MT] Processing step: IDEDistributionCodesignStep
-2026-09-06 16:50:17 +0000 [MT] Entitlements for <IDEDistributionItem: 0xa5342fcc0; bundleID='com.diaselegaletalvez.Espaco', path='<DVTFilePath:0xa5342dd40:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa5342ee20; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa5391f900; name='Apple Development: Leonardo Duarte Dias (DP4Y43J3V5)', hash='4440525F18A77EDD906EDF0C2832CF1A6B42CD34', serialNumber='5ED009CBDD38848EA4C2FD713FCBF9E5', certificateKinds='(
+}', teamID='67DVMQ4BKC', identifier='com.diaselegaletalvez.Espaco', executablePath='<DVTFilePath:0x79543eb80:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app/Contents/MacOS/Espaco'>', hardenedRuntime='1'>'>
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionInfoPlistStep
+2026-09-07 13:14:42 +0000 [MT] Skipping step: IDEDistributionInfoPlistStep because it said so
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionAppThinningPlistStep
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionSymbolsStep
+2026-09-07 13:14:42 +0000 [MT] Skipping step: IDEDistributionSymbolsStep because it said so
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionAppThinningStep
+2026-09-07 13:14:42 +0000 [MT] Skipping step: IDEDistributionAppThinningStep because it said so
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionArchThinningStep
+2026-09-07 13:14:42 +0000 [MT] Archs to thin for item /Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app are []
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionODRStep
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionStripXattrsStep
+2026-09-07 13:14:42 +0000 [MT] Skipping stripping extended attributes because the codesign step will strip them.
+2026-09-07 13:14:42 +0000 [MT] Processing step: IDEDistributionCodesignStep
+2026-09-07 13:14:42 +0000 [MT] Entitlements for <IDEDistributionItem: 0x79543fae0; bundleID='com.diaselegaletalvez.Espaco', path='<DVTFilePath:0x79543dd40:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x79543ee80; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x79592f6c0; name='Apple Development: Leonardo Duarte Dias (DP4Y43J3V5)', hash='4440525F18A77EDD906EDF0C2832CF1A6B42CD34', serialNumber='5ED009CBDD38848EA4C2FD713FCBF9E5', certificateKinds='(
     "1.2.840.113635.100.6.1.12",
     "1.2.840.113635.100.6.1.2"
 ), issueDate='2026-08-01 14:26:54 +0000''>', entitlements='{
-}', teamID='67DVMQ4BKC', identifier='com.diaselegaletalvez.Espaco', executablePath='<DVTFilePath:0xa5342f4e0:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app/Contents/MacOS/Espaco'>', hardenedRuntime='1'>'>: {
+}', teamID='67DVMQ4BKC', identifier='com.diaselegaletalvez.Espaco', executablePath='<DVTFilePath:0x79543eb80:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app/Contents/MacOS/Espaco'>', hardenedRuntime='1'>'>: {
 }
-2026-09-06 16:50:17 +0000 [MT] Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
-2026-09-06 16:50:17 +0000 [MT] Entitlements for <IDEDistributionItem: 0xa5342fcc0; bundleID='com.diaselegaletalvez.Espaco', path='<DVTFilePath:0xa5342dd40:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa5342ee20; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa5391f6c0; name='Apple Development: Leonardo Duarte Dias (DP4Y43J3V5)', hash='4440525F18A77EDD906EDF0C2832CF1A6B42CD34', serialNumber='5ED009CBDD38848EA4C2FD713FCBF9E5', certificateKinds='(
+2026-09-07 13:14:42 +0000 [MT] Associated App Clip Identifiers Filter: Skipping because "com.apple.developer.associated-appclip-app-identifiers" is not present
+2026-09-07 13:14:42 +0000 [MT] Entitlements for <IDEDistributionItem: 0x79543fae0; bundleID='com.diaselegaletalvez.Espaco', path='<DVTFilePath:0x79543dd40:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x79543ee80; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x79592f900; name='Apple Development: Leonardo Duarte Dias (DP4Y43J3V5)', hash='4440525F18A77EDD906EDF0C2832CF1A6B42CD34', serialNumber='5ED009CBDD38848EA4C2FD713FCBF9E5', certificateKinds='(
     "1.2.840.113635.100.6.1.12",
     "1.2.840.113635.100.6.1.2"
 ), issueDate='2026-08-01 14:26:54 +0000''>', entitlements='{
-}', teamID='67DVMQ4BKC', identifier='com.diaselegaletalvez.Espaco', executablePath='<DVTFilePath:0xa5342f4e0:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app/Contents/MacOS/Espaco'>', hardenedRuntime='1'>'> are: {
+}', teamID='67DVMQ4BKC', identifier='com.diaselegaletalvez.Espaco', executablePath='<DVTFilePath:0x79543eb80:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app/Contents/MacOS/Espaco'>', hardenedRuntime='1'>'> are: {
 }
-2026-09-06 16:50:17 +0000 [MT] Writing entitlements for <IDEDistributionItem: 0xa5342fcc0; bundleID='com.diaselegaletalvez.Espaco', path='<DVTFilePath:0xa5342dd40:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0xa5342ee20; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0xa5391f6c0; name='Apple Development: Leonardo Duarte Dias (DP4Y43J3V5)', hash='4440525F18A77EDD906EDF0C2832CF1A6B42CD34', serialNumber='5ED009CBDD38848EA4C2FD713FCBF9E5', certificateKinds='(
+2026-09-07 13:14:42 +0000 [MT] Writing entitlements for <IDEDistributionItem: 0x79543fae0; bundleID='com.diaselegaletalvez.Espaco', path='<DVTFilePath:0x79543dd40:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x79543ee80; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x79592f900; name='Apple Development: Leonardo Duarte Dias (DP4Y43J3V5)', hash='4440525F18A77EDD906EDF0C2832CF1A6B42CD34', serialNumber='5ED009CBDD38848EA4C2FD713FCBF9E5', certificateKinds='(
     "1.2.840.113635.100.6.1.12",
     "1.2.840.113635.100.6.1.2"
 ), issueDate='2026-08-01 14:26:54 +0000''>', entitlements='{
-}', teamID='67DVMQ4BKC', identifier='com.diaselegaletalvez.Espaco', executablePath='<DVTFilePath:0xa5342f4e0:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app/Contents/MacOS/Espaco'>', hardenedRuntime='1'>'> to: /var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~WqwdMi/entitlements~~~EpQKxp
-2026-09-06 16:50:17 +0000 [MT] invoking codesign: <NSConcreteTask: 0xa55fc23f0; launchPath='/usr/bin/codesign', arguments='(
+}', teamID='67DVMQ4BKC', identifier='com.diaselegaletalvez.Espaco', executablePath='<DVTFilePath:0x79543eb80:'/Users/gabrieldias/projetos/Espaco/dist/Espaco.xcarchive/Products/Applications/Espaco.app/Contents/MacOS/Espaco'>', hardenedRuntime='1'>'> to: /var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~nf6R0m/entitlements~~~UzfXzV
+2026-09-07 13:14:42 +0000 [MT] invoking codesign: <NSConcreteTask: 0x797fc63a0; launchPath='/usr/bin/codesign', arguments='(
     "-f",
     "-s",
     A20A9850433711DE02053A5F806BED1F37D201B7,
     "--entitlements",
-    "/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~WqwdMi/entitlements~~~EpQKxp",
+    "/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~nf6R0m/entitlements~~~UzfXzV",
     "--requirements",
     "=designated => anchor apple generic  and identifier \"$self.identifier\" and ((cert leaf[field.1.2.840.113635.100.6.1.9] exists) or ( certificate 1[field.1.2.840.113635.100.6.2.6] exists and certificate leaf[field.1.2.840.113635.100.6.1.13] exists  and certificate leaf[subject.OU] = \"67DVMQ4BKC\" ))",
     "--preserve-metadata=identifier,flags,runtime,launch-constraints,library-constraints",
     "--generate-entitlement-der",
     "--strip-disallowed-xattrs",
     "-vvv",
-    "/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~WqwdMi/Root/Applications/Espaco.app"
+    "/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~nf6R0m/Root/Applications/Espaco.app"
 )'>
-2026-09-06 16:50:18 +0000 [MT] codesign output: /var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~WqwdMi/Root/Applications/Espaco.app: replacing existing signature
-/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~WqwdMi/Root/Applications/Espaco.app: signed app bundle with Mach-O universal (x86_64 arm64) [com.diaselegaletalvez.Espaco]
-2026-09-06 16:50:18 +0000 [MT] Processing step: IDEDistributionZipODRItemStep
-2026-09-06 16:50:18 +0000 [MT] Skipping step: IDEDistributionZipODRItemStep because it said so
-2026-09-06 16:50:18 +0000 [MT] Processing step: IDEDistributionSkipPackagingStep
-2026-09-06 16:50:18 +0000 [MT] Processing step: IDEDistributionAppStoreInformationStep
-2026-09-06 16:50:18 +0000 [MT] Skipping step: IDEDistributionAppStoreInformationStep because it said so
-2026-09-06 16:50:18 +0000 [MT] Processing step: IDEDistributionGenerateProcessedDistributionItems
-2026-09-06 16:50:18 +0000 [MT] IDEDistributionItem init <DVTFilePath:0xa53631020:'/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~WqwdMi/Root/Applications/Espaco.app'>
-2026-09-06 16:50:18 +0000 [MT] [OPTIONAL] Didn't find embedded provisioning profile for <DVTFilePath:0xa53631020:'/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~WqwdMi/Root/Applications/Espaco.app'>: Error Domain=NSCocoaErrorDomain Code=4 "No file at <DVTFilePath:0xa55f39500:'/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~WqwdMi/Root/Applications/Espaco.app/Contents/embedded.provisionprofile'>" UserInfo={NSLocalizedDescription=No file at <DVTFilePath:0xa55f39500:'/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~WqwdMi/Root/Applications/Espaco.app/Contents/embedded.provisionprofile'>}
-2026-09-06 16:50:18 +0000 [MT] Processing step: IDEDistributionCreateManifestStep
-2026-09-06 16:50:18 +0000 [MT] Skipping step: IDEDistributionCreateManifestStep because it said so
+2026-09-07 13:14:43 +0000 [MT] codesign output: /var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~nf6R0m/Root/Applications/Espaco.app: replacing existing signature
+/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~nf6R0m/Root/Applications/Espaco.app: signed app bundle with Mach-O universal (x86_64 arm64) [com.diaselegaletalvez.Espaco]
+2026-09-07 13:14:43 +0000 [MT] Processing step: IDEDistributionZipODRItemStep
+2026-09-07 13:14:43 +0000 [MT] Skipping step: IDEDistributionZipODRItemStep because it said so
+2026-09-07 13:14:43 +0000 [MT] Processing step: IDEDistributionSkipPackagingStep
+2026-09-07 13:14:43 +0000 [MT] Processing step: IDEDistributionAppStoreInformationStep
+2026-09-07 13:14:43 +0000 [MT] Skipping step: IDEDistributionAppStoreInformationStep because it said so
+2026-09-07 13:14:43 +0000 [MT] Processing step: IDEDistributionGenerateProcessedDistributionItems
+2026-09-07 13:14:43 +0000 [MT] IDEDistributionItem init <DVTFilePath:0x7955ecf60:'/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~nf6R0m/Root/Applications/Espaco.app'>
+2026-09-07 13:14:43 +0000 [MT] [OPTIONAL] Didn't find embedded provisioning profile for <DVTFilePath:0x7955ecf60:'/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~nf6R0m/Root/Applications/Espaco.app'>: Error Domain=NSCocoaErrorDomain Code=4 "No file at <DVTFilePath:0x797f8ce00:'/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~nf6R0m/Root/Applications/Espaco.app/Contents/embedded.provisionprofile'>" UserInfo={NSLocalizedDescription=No file at <DVTFilePath:0x797f8ce00:'/var/folders/ng/lv_86wqd1tzf4lr7x2sx022c0000gn/T/XcodeDistPipeline.~~~nf6R0m/Root/Applications/Espaco.app/Contents/embedded.provisionprofile'>}
+2026-09-07 13:14:43 +0000 [MT] Processing step: IDEDistributionCreateManifestStep
+2026-09-07 13:14:43 +0000 [MT] Skipping step: IDEDistributionCreateManifestStep because it said so

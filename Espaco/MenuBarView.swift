@@ -38,9 +38,9 @@ struct MenuBarView: View {
             Divider()
 
             Button {
-                Task { await state.turbo() }
+                Task { await state.limpezaAutomatica() }
             } label: {
-                Label("Turbo · limpar risco zero", systemImage: "bolt.fill")
+                Label("Turbo · \(Config.shared.nivel.titulo.lowercased())", systemImage: "bolt.fill")
             }
             .disabled(state.cleaning || state.scanning || state.reclaimable == 0)
 

@@ -15,6 +15,8 @@ struct AutomationView: View {
             VStack(alignment: .leading, spacing: 20) {
 
                 cabecalho
+                CartaoPareamento()
+                CartaoNivel()
                 CartaoAtualizacao()
                 CartaoVigilancia()
                 agendamento
@@ -390,7 +392,7 @@ struct CartaoAtualizacao: View {
         case .baixando:    return "Baixando…"
         case .instalando:  return "Instalando…"
         case .pronto:      return "Atualizado. Reiniciando o app…"
-        case .erro(let e): return "Não deu pra checar"
+        case .erro:        return "Não deu pra checar"
         }
     }
 
@@ -471,6 +473,85 @@ struct CartaoVigilancia: View {
                     .padding(.vertical, 3)
                 }
             }
+        }
+    }
+}
+
+
+struct CartaoNivel: View {
+    @Environment(AppState.self) private var state
+    @Bindable private var config = Config.shared
+
+    private var previa: Int64 {
+        state.alvosDoNivel.reduce(0) { $0 + $1.size }
+        + state.projetosDormentesDoNivel.reduce(0) { $0 + $1.peso }
+    }
+
+    var body: some View {
+        Cartao(titulo: "Nível da limpeza automática") {
+            Picker("", selection: $config.nivel) {
+                ForEach(NivelLimpeza.allCases) { n in
+                    Text(n.titulo).tag(n)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+
+            Text(config.nivel.resumo)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            if config.nivel == .medio {
+                HStack(spacing: 10) {
+                    Text("Considerar parado depois de").font(.callout)
+                    Picker("", selection: $config.diasParaDormente) {
+                        Text("30 dias").tag(30)
+                        Text("60 dias").tag(60)
+                        Text("90 dias").tag(90)
+                        Text("6 meses").tag(180)
+                    }
+                    .labelsHidden()
+                    .frame(width: 120)
+                    Spacer()
+                }
+                .padding(.top, 2)
+
+                if !state.projetosDormentesDoNivel.isEmpty {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Entrariam na próxima limpeza")
+                            .font(T.rotulo).foregroundStyle(.secondary)
+                        ForEach(state.projetosDormentesDoNivel.prefix(5)) { p in
+                            HStack(spacing: 8) {
+                                Circle().fill(T.atencao).frame(width: 5, height: 5)
+                                Text(p.nome).font(.callout)
+                                Text(p.descricaoTempo)
+                                    .font(.caption).foregroundStyle(.tertiary)
+                                Spacer()
+                                Text(Fmt.bytes(p.peso))
+                                    .font(.callout.monospacedDigit())
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .padding(11)
+                    .background(T.atencao.opacity(0.10), in: RoundedRectangle(cornerRadius: 7))
+                }
+            }
+
+            HStack {
+                Text(previa > 0
+                     ? "Hoje isso liberaria \(Fmt.bytes(previa))"
+                     : "Nada a limpar neste nível agora")
+                    .font(.callout).foregroundStyle(.secondary)
+                Spacer()
+                Button("Rodar agora") {
+                    Task { await state.limpezaAutomatica() }
+                }
+                .controlSize(.small)
+                .disabled(state.cleaning || previa == 0)
+            }
+            .padding(.top, 2)
         }
     }
 }

@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+#  postinstall — configura as automações do Espaço para o usuário logado
+#
+
+set -e
+
+USUARIO=$(stat -f "%Su" /dev/console)
+[ -z "$USUARIO" ] || [ "$USUARIO" = "root" ] && USUARIO=$(ls -l /dev/console | awk '{print $3}')
+LAR=$(dscl . -read "/Users/$USUARIO" NFSHomeDirectory 2>/dev/null | awk '{print $2}')
+[ -d "$LAR" ] || LAR="/Users/$USUARIO"
+
+comoUsuario() { sudo -u "$USUARIO" "$@"; }
+
+echo "configurando para $USUARIO em $LAR"
+
+comoUsuario mkdir -p "$LAR/bin" "$LAR/Relatorios/logs" "$LAR/Library/LaunchAgents"
+
+if [ -f /usr/local/share/espaco/mac-report.sh ]; then
+  comoUsuario cp /usr/local/share/espaco/mac-report.sh "$LAR/bin/mac-report.sh"
+  comoUsuario chmod +x "$LAR/bin/mac-report.sh"
+  echo "script de relatório instalado"
+fi
+
+PLIST="$LAR/Library/LaunchAgents/com.diasinc.macreport.plist"
+
+comoUsuario tee "$PLIST" >/dev/null <<PLISTFIM
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.diasinc.macreport</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>-lc</string>
+        <string>$LAR/bin/mac-report.sh</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key><integer>0</integer>
+        <key>Minute</key><integer>0</integer>
+    </dict>
+    <key>RunAtLoad</key>
+    <false/>
+    <key>StandardOutPath</key>
+    <string>$LAR/Relatorios/logs/out.log</string>
+    <key>StandardErrorPath</key>
+    <string>$LAR/Relatorios/logs/err.log</string>
+    <key>ProcessType</key>
+    <string>Background</string>
+</dict>
+</plist>
+PLISTFIM
+
+UID_USUARIO=$(id -u "$USUARIO")
+comoUsuario launchctl bootout "gui/$UID_USUARIO/com.diasinc.macreport" 2>/dev/null || true
+comoUsuario launchctl bootstrap "gui/$UID_USUARIO" "$PLIST" 2>/dev/null || true
+comoUsuario launchctl enable "gui/$UID_USUARIO/com.diasinc.macreport" 2>/dev/null || true
+echo "relatório diário agendado para 00:00"
+
+NIVEL="${ESPACO_NIVEL:-medio}"
+
+comoUsuario mkdir -p "$LAR/.espaco"
+comoUsuario tee "$LAR/.espaco/config" >/dev/null <<CFGFIM
+nivel=$NIVEL
+dias_dormente=60
+CFGFIM
+echo "nível de limpeza: $NIVEL"
+
+echo "rodando a primeira limpeza"
+comoUsuario /usr/local/bin/espaco limpar "$NIVEL" > "$LAR/Relatorios/logs/instalacao.log" 2>&1 || true
+
+echo "gerando o primeiro relatório"
+comoUsuario /bin/bash -lc "$LAR/bin/mac-report.sh" >> "$LAR/Relatorios/logs/instalacao.log" 2>&1 || true
+
+comoUsuario chown -R "$USUARIO" "$LAR/Relatorios" 2>/dev/null || true
+
+LIVRE=$(df -h /System/Volumes/Data | tail -1 | awk '{print $4}')
+comoUsuario osascript -e "display notification \"Automações instaladas. $LIVRE livres agora. Relatório diário às 00:00.\" with title \"Espaço\" sound name \"Glass\"" 2>/dev/null || true
+
+exit 0

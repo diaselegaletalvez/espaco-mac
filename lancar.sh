@@ -76,6 +76,15 @@ if [ "$ENSAIO" = "1" ]; then
   exit 0
 fi
 
+etapa "Montando o pacote de automações"
+./criar-pacote.sh || aviso "o pacote de risco zero falhou"
+PKG="$APP_DIR/dist/Espaco-Automacoes.pkg"
+[ -f "$PKG" ] && ok "pacote risco zero pronto" || aviso "sem pacote de risco zero"
+
+./criar-pacote.sh --medio || aviso "o pacote de risco médio falhou"
+PKG_MEDIO="$APP_DIR/dist/Espaco-Automacoes-Medio.pkg"
+[ -f "$PKG_MEDIO" ] && ok "pacote risco médio pronto" || aviso "sem pacote de risco médio"
+
 etapa "Publicando o site"
 cd "$SITE_DIR"
 if [ -n "$(git status --porcelain)" ]; then
@@ -105,8 +114,14 @@ fi
 
 etapa "Criando o release v$VERSAO"
 
-NOTAS="/tmp/notas-espaco-$VERSAO.md"
-cat > "$NOTAS" <<FIMNOTAS
+NOTAS="$APP_DIR/notas/$VERSAO.md"
+
+if [ -f "$NOTAS" ]; then
+  ok "usando as notas de notas/$VERSAO.md"
+else
+  aviso "sem notas/$VERSAO.md — gerando um texto genérico"
+  NOTAS="/tmp/notas-espaco-$VERSAO.md"
+  cat > "$NOTAS" <<FIMNOTAS
 ## O que o Espaço faz
 
 **Limpar** — Revisão (um botão, cinco varreduras, uma lista), Mapa do disco em treemap navegável, Apps com seus resíduos, arquivos Esquecidos, dependências de Projetos parados, e Duplicados por SHA-256.
@@ -144,12 +159,18 @@ Recomendado dar **Acesso Total ao Disco** em Ajustes → Privacidade e Seguranç
 
 Requer macOS 14 ou mais novo.
 FIMNOTAS
+fi
 
 if gh release view "v$VERSAO" --repo "$REPO" >/dev/null 2>&1; then
   aviso "o release v$VERSAO já existe — substituindo o .dmg"
   gh release upload "v$VERSAO" "$DMG" --repo "$REPO" --clobber
+  [ -f "$PKG" ] && gh release upload "v$VERSAO" "$PKG" --repo "$REPO" --clobber
+  [ -f "$PKG_MEDIO" ] && gh release upload "v$VERSAO" "$PKG_MEDIO" --repo "$REPO" --clobber
 else
-  gh release create "v$VERSAO" "$DMG" \
+  ANEXOS=("$DMG")
+  [ -f "$PKG" ] && ANEXOS+=("$PKG")
+  [ -f "$PKG_MEDIO" ] && ANEXOS+=("$PKG_MEDIO")
+  gh release create "v$VERSAO" "${ANEXOS[@]}" \
     --repo "$REPO" \
     --title "Espaço $VERSAO" \
     --notes-file "$NOTAS"
@@ -166,7 +187,7 @@ else
   aviso "o link respondeu $CODIGO — pode levar um minuto pra propagar"
 fi
 
-rm -f "$NOTAS"
+case "$NOTAS" in /tmp/*) rm -f "$NOTAS" ;; esac
 
 echo
 echo "${G}╔══════════════════════════════════════════════╗${N}"
