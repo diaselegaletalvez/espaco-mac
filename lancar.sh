@@ -78,11 +78,11 @@ fi
 
 etapa "Montando o pacote de automações"
 ./criar-pacote.sh || aviso "o pacote de risco zero falhou"
-PKG="$APP_DIR/dist/Espaco-Automacoes.pkg"
+PKG="$APP_DIR/dist/Espaco-Automacoes-riskzero.pkg"
 [ -f "$PKG" ] && ok "pacote risco zero pronto" || aviso "sem pacote de risco zero"
 
 ./criar-pacote.sh --medio || aviso "o pacote de risco médio falhou"
-PKG_MEDIO="$APP_DIR/dist/Espaco-Automacoes-Medio.pkg"
+PKG_MEDIO="$APP_DIR/dist/Espaco-Automacoes-riskmedio.pkg"
 [ -f "$PKG_MEDIO" ] && ok "pacote risco médio pronto" || aviso "sem pacote de risco médio"
 
 etapa "Publicando o site"

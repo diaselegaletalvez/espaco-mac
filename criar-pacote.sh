@@ -30,9 +30,10 @@ for arg in "$@"; do
 done
 
 if [ "$NIVEL" = "medio" ]; then
-  NOME="Espaco-Automacoes-Medio"
+  NOME="Espaco-Automacoes-riskmedio"
   TITULO="Automações do Espaço · risco médio"
 else
+  NOME="Espaco-Automacoes-riskzero"
   TITULO="Automações do Espaço"
 fi
 
@@ -126,8 +127,8 @@ XML
 ok "distribuicao.xml"
 
 passo "Montando o instalador"
-PKG="$SAIDA/$NOME-$VERSAO.pkg"
-PKG_ESTAVEL="$SAIDA/Espaco-Automacoes.pkg"
+PKG="$SAIDA/$NOME.pkg"
+PKG_ESTAVEL="$SAIDA/$NOME.pkg"
 rm -f "$PKG" "$PKG_ESTAVEL"
 
 if [ "$ASSINAR" = "1" ]; then
@@ -147,7 +148,6 @@ else
 fi
 
 rm -f "$COMPONENTE" "$SAIDA/distribuicao.xml"
-cp "$PKG" "$PKG_ESTAVEL"
 ok "$(du -h "$PKG" | cut -f1) em $(basename "$PKG")"
 
 if [ "$ASSINAR" = "0" ] || [ "$NOTARIZAR" = "0" ]; then
@@ -166,8 +166,6 @@ fi
 echo "  ${C}1 a 5 minutos...${N}"
 xcrun notarytool submit "$PKG" --keychain-profile "$PERFIL" --wait || erro "a notarização falhou"
 xcrun stapler staple "$PKG"
-cp "$PKG" "$PKG_ESTAVEL"
-xcrun stapler staple "$PKG_ESTAVEL" 2>/dev/null || true
 ok "selo grampeado"
 
 passo "Conferindo"
