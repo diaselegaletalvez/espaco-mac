@@ -60,7 +60,7 @@ comoUsuario launchctl bootstrap "gui/$UID_USUARIO" "$PLIST" 2>/dev/null || true
 comoUsuario launchctl enable "gui/$UID_USUARIO/com.diasinc.macreport" 2>/dev/null || true
 echo "relatório diário agendado para 00:00"
 
-NIVEL="${ESPACO_NIVEL:-medio}"
+NIVEL="${ESPACO_NIVEL:-zero}"
 
 comoUsuario mkdir -p "$LAR/.espaco"
 comoUsuario tee "$LAR/.espaco/config" >/dev/null <<CFGFIM

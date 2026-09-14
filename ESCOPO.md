@@ -4,8 +4,8 @@ Fonte da verdade desta release. Se não está aqui, não entra.
 
 ## 1. Versão e status
 
-- Versão: **2.2** (o Xcode ainda está em `MARKETING_VERSION = 2.1`, build `202609071013`)
-- Status: **rascunho** — o Dias precisa aprovar antes do Rex implementar
+- Versão: **2.2** (o Xcode ainda está em `MARKETING_VERSION = 2.1`, build `202609071013`; o `lancar.sh 2.2` no Mac do Dias é quem sobe)
+- Status: **em implementação**
 
 ## 2. O que já enviou (2.1)
 
@@ -52,13 +52,14 @@ Este agente **não compila Swift**. Build, assinatura, notarização e release s
 
 Pronto quando:
 
-- [ ] Dias aprovou este ESCOPO
-- [ ] Nomes de `.pkg`, notas e `lancar.sh` falam a mesma língua
-- [ ] `criar-pacote.sh` não deixa `welcome.html` / `postinstall` sujos
-- [ ] CLI `espaco` mostra a versão certa
-- [ ] Link do celular aponta pra `espaco-mobile`
-- [ ] `notas/2.2.md` escrita (o `lancar.sh` usa `notas/$VERSAO.md`)
-- [ ] Zero continua o padrão; nenhuma regra nova de delete
+- [x] Dias aprovou este ESCOPO (ordens via Nico)
+- [x] Nomes de `.pkg`, notas e `lancar.sh` falam a mesma língua
+- [x] `criar-pacote.sh` não deixa `welcome.html` / `postinstall` sujos
+- [x] CLI `espaco` mostra a versão certa
+- [x] Link do celular aponta pra `espaco-mobile`
+- [x] `notas/2.2.md` escrita (o `lancar.sh` usa `notas/$VERSAO.md`)
+- [x] Zero continua o padrão; nenhuma regra nova de delete
+- [ ] Dias compilou, notarizou e lançou no Mac (`./lancar.sh 2.2`)
 
 Lançar, no Mac, a partir de `espaco-mac`:
 
