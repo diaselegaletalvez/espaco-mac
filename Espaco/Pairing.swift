@@ -23,20 +23,6 @@ struct DispositivoPareado: Identifiable, Codable, Sendable {
     }
 }
 
-enum Escopo: String, Codable, CaseIterable, Sendable {
-    case ler
-    case limparSeguro
-    case limparTudo
-
-    var titulo: String {
-        switch self {
-        case .ler:          return "Ver o estado do Mac"
-        case .limparSeguro: return "Limpar caches"
-        case .limparTudo:   return "Limpar tudo, com confirmação aqui"
-        }
-    }
-}
-
 enum Chaveiro {
     private static let servico = "com.diaselegaletalvez.Espaco.pareamento"
 
@@ -153,6 +139,7 @@ final class Pareamento {
         modoPareamento = false
         codigoAtual = nil
         segundosRestantes = 0
+        if dispositivos.isEmpty { ServidorLocal.shared.desligar() }
     }
 
     func aceitar(codigo: String, nome: String, modelo: String) -> String? {

@@ -7,15 +7,15 @@ li{margin-bottom:5px}
 b{font-weight:600}
 @media (prefers-color-scheme:dark){body{color:#e8e8ed}.nota{background:#2a2a2e;color:#b0b0ba}}
 </style></head><body>
-<h2>Automações do Espaço · risco médio</h2>
+<h2>Automações do Espaço</h2>
 <p>Este pacote instala as ferramentas de linha de comando do Espaço e liga o relatório diário do seu Mac.</p>
 <p><b>O que vai acontecer quando você clicar em Instalar:</b></p>
 <ul>
   <li>O comando <b>espaco</b> fica disponível no Terminal</li>
   <li>O relatório diário é agendado para <b>meia-noite</b>, e mede o disco, limpa o que é cache e escreve um resumo em <b>~/Relatorios</b></li>
-  <li>Uma <b>primeira limpeza</b> roda agora: os caches de sempre, <b>mais as dependências de projetos parados há mais de 60 dias</b></li>
+  <li>Uma <b>primeira limpeza de risco zero</b> roda agora: caches do Xcode, npm, Homebrew, Chrome e afins</li>
 </ul>
 <div class="nota">
-<b>Sobre o risco médio.</b> As dependências de projetos parados (<code>node_modules</code>, <code>Pods</code>, <code>.next</code>) vão para a <b>Lixeira</b>, não são apagadas — dá pra voltar atrás até você esvaziá-la. Elas voltam com um <code>npm install</code>. Seu código, seus apps e seus arquivos pessoais não são tocados. Archives do Xcode também não.
+<b>O que este pacote não faz.</b> Ele não apaga nada que exija decisão sua — node_modules, Pods, Archives do Xcode, apps ou arquivos pessoais ficam intactos. Isso é trabalho do app Espaço, onde você vê cada item e marca antes de confirmar.
 </div>
 </body></html>

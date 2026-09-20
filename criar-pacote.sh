@@ -18,7 +18,7 @@ ID="com.diaselegaletalvez.espaco.automacoes"
 NOME="Espaco-Automacoes"
 PERFIL="espaco-notarizacao"
 SAIDA="$PWD/dist"
-VERSAO=$(defaults read "$PWD/dist/exportado/Espaco.app/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2.0")
+VERSAO=$(defaults read "$PWD/dist/exportado/Espaco.app/Contents/Info.plist" CFBundleShortVersionString 2>/dev/null || echo "2.2")
 
 NOTARIZAR=1
 NIVEL="zero"
@@ -30,10 +30,10 @@ for arg in "$@"; do
 done
 
 if [ "$NIVEL" = "medio" ]; then
-  NOME="Espaco-Automacoes-riskmedio"
+  NOME="Espaco-Automacoes-Medio"
   TITULO="Automações do Espaço · risco médio"
 else
-  NOME="Espaco-Automacoes-riskzero"
+  NOME="Espaco-Automacoes"
   TITULO="Automações do Espaço"
 fi
 
@@ -49,12 +49,18 @@ mkdir -p "$SAIDA"
 cp "$HOME/bin/mac-report.sh" pacote/payload/usr/local/share/espaco/mac-report.sh
 chmod +x pacote/payload/usr/local/share/espaco/mac-report.sh
 chmod +x pacote/payload/usr/local/bin/espaco
-chmod +x pacote/scripts/postinstall
 
-python3 - "$NIVEL" <<'PYNIVEL'
+PALCO=$(mktemp -d)
+trap 'rm -rf "$PALCO"' EXIT
+mkdir -p "$PALCO/scripts" "$PALCO/recursos"
+cp -R pacote/scripts/. "$PALCO/scripts/"
+cp -R pacote/recursos/. "$PALCO/recursos/"
+chmod +x "$PALCO/scripts/postinstall"
+
+python3 - "$NIVEL" "$PALCO/scripts/postinstall" <<'PYNIVEL'
 import sys, pathlib, re
 nivel = sys.argv[1]
-p = pathlib.Path("pacote/scripts/postinstall")
+p = pathlib.Path(sys.argv[2])
 s = p.read_text()
 s = re.sub(r'NIVEL="\$\{ESPACO_NIVEL:-\w+\}"',
            f'NIVEL="${{ESPACO_NIVEL:-{nivel}}}"', s, count=1)
@@ -62,9 +68,9 @@ p.write_text(s)
 PYNIVEL
 
 if [ "$NIVEL" = "medio" ]; then
-  python3 - <<'PYWELCOME'
-import pathlib
-p = pathlib.Path("pacote/recursos/welcome.html")
+  python3 - "$PALCO/recursos/welcome.html" <<'PYWELCOME'
+import pathlib, sys
+p = pathlib.Path(sys.argv[1])
 s = p.read_text()
 s = s.replace("<h2>Automações do Espaço</h2>",
               "<h2>Automações do Espaço · risco médio</h2>")
@@ -74,7 +80,7 @@ s = s.replace("<b>O que este pacote não faz.</b> Ele não apaga nada que exija 
               "<b>Sobre o risco médio.</b> As dependências de projetos parados (<code>node_modules</code>, <code>Pods</code>, <code>.next</code>) vão para a <b>Lixeira</b>, não são apagadas — dá pra voltar atrás até você esvaziá-la. Elas voltam com um <code>npm install</code>. Seu código, seus apps e seus arquivos pessoais não são tocados. Archives do Xcode também não.")
 p.write_text(s)
 PYWELCOME
-  ok "textos ajustados pro risco médio"
+  ok "textos do palco ajustados pro risco médio"
 fi
 
 ok "CLI e script de relatório no lugar"
@@ -96,7 +102,7 @@ passo "Montando o componente"
 COMPONENTE="$SAIDA/componente.pkg"
 pkgbuild \
   --root pacote/payload \
-  --scripts pacote/scripts \
+  --scripts "$PALCO/scripts" \
   --identifier "$ID" \
   --version "$VERSAO" \
   --install-location / \
@@ -134,7 +140,7 @@ rm -f "$PKG" "$PKG_ESTAVEL"
 if [ "$ASSINAR" = "1" ]; then
   productbuild \
     --distribution "$SAIDA/distribuicao.xml" \
-    --resources pacote/recursos \
+    --resources "$PALCO/recursos" \
     --package-path "$SAIDA" \
     --sign "$INSTALADOR" \
     --timestamp \
@@ -142,7 +148,7 @@ if [ "$ASSINAR" = "1" ]; then
 else
   productbuild \
     --distribution "$SAIDA/distribuicao.xml" \
-    --resources pacote/recursos \
+    --resources "$PALCO/recursos" \
     --package-path "$SAIDA" \
     "$PKG" >/dev/null
 fi
